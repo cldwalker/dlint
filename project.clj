@@ -8,7 +8,7 @@
   :test-paths ["target/cljx/test/clj" "test"]
   :source-paths ["target/cljx/test/clj" "src"]
 
-  :profiles {:1.5 {:dependencies [[org.clojure/clojure "1.5.0"]]}
+  :profiles {:1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
              :dev {:plugins [[com.keminglabs/cljx "0.4.0"]
                              [lein-cljsbuild "1.0.3"]
                              [com.cemerick/clojurescript.test "0.3.1"]]
