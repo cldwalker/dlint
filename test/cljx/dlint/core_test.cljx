@@ -45,5 +45,12 @@
              [?e2 :alias ?name]]]))
 
 (deftest lint-rules
-  (is (= {:name-or-alias #{'?e1 '?e2}}
-         (lint rules))))
+  (testing "no typos"
+    (is (= {}
+           (lint (take 1 rules)))))
+  (testing "typo in one rule"
+    (is (= {:name-or-alias #{'?e '?e1}}
+           (lint (take 2 rules)))))
+  (testing "typos in rule with OR clauses"
+    (is (= {:name-or-alias #{'?e '?e1 '?e2}}
+           (lint rules)))))

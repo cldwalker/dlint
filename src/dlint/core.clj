@@ -26,6 +26,7 @@
   "Lints map at given key and returns set of unbound variables"
   [map-key lint-map]
   (let [tuples (get lint-map map-key)
+        ;; Tuples can be one e.g. :find or a list of them e.g. :where
         tuples (if (sequential? (first tuples)) tuples (list tuples))
         other-key-vals (map #(get lint-map %)
                             (disj (set (keys lint-map)) map-key))]
@@ -35,21 +36,23 @@
                               (disj (set (get lint-map map-key)) %)))
                 tuples))))
 
-(defn- ->unused-variables [lint-map]
+(defn- unbound-query-variables [lint-map]
   (->> (keys lint-map)
        (map #(vector % (lint-map-key % lint-map)))
        (remove (comp empty? second))
        (into {})))
 
-(defn- lint-rules [rules]
-  (let [rules-map (->> rules (map-indexed #(vector %1 %2)) (into {}))
-        key-map (->> rules (map-indexed #(vector %1 (keyword (ffirst %2)))) (into {}))]
-    (reduce-kv
-     (fn [accum k v]
-       (update-in accum [(get key-map k)]
-                  (fnil into #{}) v))
-     {}
-     (->unused-variables rules-map))))
+(defn- unbound-rule-variables [rules]
+  (->> (map-indexed #(vector %1 %2) rules)
+       (reduce
+        (fn [accum [index rule-tuples]]
+          (let [unbound (lint-map-key index {index rule-tuples})
+                rule-name (keyword (ffirst rule-tuples))]
+            (update-in accum [rule-name]
+                       (fnil into #{}) unbound)))
+        {})
+       (remove (comp empty? second))
+       (into {})))
 
 (defn lint
   "Lints a datomic-style datalog query or rule. For queries, returns a map of
@@ -58,5 +61,6 @@
   {:some-rule #{'?aarg1}}"
   [query-or-rule]
   (if (and (sequential? (first query-or-rule)) (sequential? (ffirst query-or-rule)))
-    (lint-rules query-or-rule)
-    (->unused-variables (if (map? query-or-rule) query-or-rule (parse-query query-or-rule)))))
+    (unbound-rule-variables query-or-rule)
+    (unbound-query-variables (if (map? query-or-rule)
+                               query-or-rule (parse-query query-or-rule)))))
