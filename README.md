@@ -60,6 +60,10 @@ a query doesn't lint correctly:
 
 Please report them [on github](http://github.com/cldwalker/dlint/issues).
 
+## Credits
+
+* @cognitect for fridays!
+
 ## License
 
 See LICENSE.TXT
