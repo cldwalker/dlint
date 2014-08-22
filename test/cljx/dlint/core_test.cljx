@@ -1,6 +1,8 @@
 (ns dlint.core-test
-    (:require [clojure.test :refer :all]
-              [dlint.core :refer [lint]]))
+  #+cljs (:require-macros [cemerick.cljs.test :refer [is deftest testing]])
+  (:require #+clj [clojure.test :refer [is testing deftest]]
+            #+cljs [cemerick.cljs.test :as t]
+            [dlint.core :refer [lint]]))
 
 (deftest lint-basic-queries
   (testing "query map"

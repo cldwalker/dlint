@@ -1,5 +1,6 @@
 (ns dlint.core
   (:require [clojure.set :as cset]))
+;; Just symlinked this ns instead of .cljx b/c cljx + LT clj(s) repl is a yak
 
 ;; thanks to datascript
 (defn- parse-query [query]
