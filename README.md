@@ -4,6 +4,8 @@ dlint lints datomic-style datalog queries and rules - checking for unbound varia
 
 ## Install
 
+[![dlint](http://clojars.org/me.tagaholic/dlint/latest-version.svg)](http://clojars.org/me.tagaholic/dlint)
+
 Add to your project.clj:
 
     [me.tagaholic/dlint "0.1.0"]
