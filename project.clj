@@ -1,18 +1,21 @@
-(defproject dlint "0.1.0-SNAPSHOT"
-  :description "TODO"
+(defproject me.tagaholic/dlint "0.1.0"
+  :description "Lint datomic-style datalog queries and rules"
   :url "http://github.com/cldwalker/dlint"
   :license {:name "The MIT License"
             :url "https://en.wikipedia.org/wiki/MIT_License"}
-  :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2311"]]
-  :test-paths ["target/cljx/test/clj" "test"]
-  :source-paths ["target/cljx/test/clj" "src"]
+  :test-paths ["target/cljx/test/clj"]
 
   :profiles {:1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
-             :dev {:plugins [[com.keminglabs/cljx "0.4.0"]
+             :no-dev [:base :system :user :provided]
+
+             :dev {:dependencies [[org.clojure/clojure "1.6.0"]
+                                  [org.clojure/clojurescript "0.0-2311"]]
+                   :plugins [[com.keminglabs/cljx "0.4.0"]
                              [lein-cljsbuild "1.0.3"]
                              [com.cemerick/clojurescript.test "0.3.1"]]
-                   :hooks [cljx.hooks leiningen.cljsbuild]}}
+                   ;; causes lein install to fail b/c of dev deps
+                   :hooks [cljx.hooks leiningen.cljsbuild]
+                   }}
 
   :cljx {:builds [{:source-paths ["test/cljx"]
                    :output-path "target/cljx/test/clj"
@@ -24,8 +27,7 @@
   :cljsbuild {:test-commands {"unit" ["phantomjs" :runner
                                       "target/unit-test.js"]}
               :builds
-              {:test {:source-paths ["src" "test"
-                                     "target/cljx/test/cljs"]
+              {:test {:source-paths ["src" "target/cljx/test/cljs"]
                       :compiler {:output-to "target/unit-test.js"
                                  :optimizations :whitespace
                                  :pretty-print true}}}}
